@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -18,7 +19,7 @@ public class Item {
 
     String name;
     int quantity;
-    int totalPrice;
+    int price;
 
     @ManyToOne
     @JoinColumn
@@ -28,7 +29,7 @@ public class Item {
     @JoinColumn
     Ordered ordered;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn
     Product product;
 }

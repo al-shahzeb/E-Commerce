@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Builder
 @Data
@@ -31,7 +34,7 @@ public class Product {
     @JoinColumn
     Distributor distributor;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
-    Item item;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    List<Item> items=new ArrayList<>();
 
 }
