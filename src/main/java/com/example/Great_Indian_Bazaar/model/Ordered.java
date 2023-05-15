@@ -3,6 +3,8 @@ package com.example.Great_Indian_Bazaar.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,8 +22,10 @@ public class Ordered {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
+    @UuidGenerator
     String orderNo;
     int total;
+    @CreationTimestamp
     Date orderedOn;
     String cardUsed;
 

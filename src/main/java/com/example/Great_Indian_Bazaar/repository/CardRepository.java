@@ -15,6 +15,8 @@ public interface CardRepository extends JpaRepository<Card,Integer> {
 
     Card findByCvv(int cvv);
 
+    Card findByCardNumber(String cardNumber);
+
     @Query(value = "select card_type from card c Group By c.card_type Order By COUNT(*) DESC LIMIT 1", nativeQuery = true)
     CardType findCardWithMaxCount();
 }
