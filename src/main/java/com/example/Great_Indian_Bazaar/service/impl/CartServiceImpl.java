@@ -78,6 +78,7 @@ public class CartServiceImpl implements CartService {
             orderPlacedResponse.setItems(itemResponses);
             orderPlacedResponse.setOrderNo(ordered.getOrderNo());
 
+            OrderedServiceImpl.sendMessage(customer.getName(),ordered.getTotal());
             resetCart(cart);
 
             return orderPlacedResponse;
@@ -138,6 +139,5 @@ public class CartServiceImpl implements CartService {
         resetCart.setTotalItems(0);
         resetCart.setItems(new ArrayList<>());
     }
-
 
 }

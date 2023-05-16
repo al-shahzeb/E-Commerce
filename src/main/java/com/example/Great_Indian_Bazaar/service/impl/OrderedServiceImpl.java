@@ -25,7 +25,8 @@ import java.util.UUID;
 @Service
 public class OrderedServiceImpl implements OrderedService {
 
-
+    @Autowired
+    static JavaMailSender javaMailSender;
     @Autowired
     OrderedRepository orderedRepository;
     @Autowired
@@ -103,8 +104,18 @@ public class OrderedServiceImpl implements OrderedService {
         response.setOrderedBy(customer.getName());
         response.setProduct(product.getName());
 
+        sendMessage(customer.getName(), ordered.getTotal());
         return response;
 
+    }
+    public static void sendMessage(String name, int total) {
+         SimpleMailMessage message = new SimpleMailMessage();
+         String text = "Hi " + name + " \nYour order of Rs. " + total + " is placed successfully.";
+         message.setFrom("lord.of.darkness00000@gmail.com");
+         message.setTo("alishahzeb453@gmail.com");
+         message.setSubject("CONGRATS!! Order Placed");
+         message.setText(text);
+         javaMailSender.send(message);
     }
 
     @Override
