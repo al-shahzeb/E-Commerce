@@ -32,11 +32,13 @@ public class CartServiceImpl implements CartService {
     @Autowired
     ItemService itemService;
     @Autowired
-    ProductRepository productRepository;
-    @Autowired
     CustomerRepository customerRepository;
     @Autowired
     OrderedService orderedService;
+    @Autowired
+    ItemRepository itemRepository;
+    @Autowired
+    ProductRepository productRepository;
 
     @Override
     public ItemToCartResponse addToCart(ItemRequest itemRequest) throws ResourceNotFoundException {
@@ -61,8 +63,6 @@ public class CartServiceImpl implements CartService {
             throw new ResourceNotFoundException("Cart is empty!");
 
 
-
-
         try {
             Cart cart = customer.getCart();
             Ordered ordered = orderedService.placeOrder(customer,card);
@@ -79,6 +79,7 @@ public class CartServiceImpl implements CartService {
             orderPlacedResponse.setOrderNo(ordered.getOrderNo());
 
             resetCart(cart);
+
             return orderPlacedResponse;
         }
         catch (Exception e){
@@ -87,11 +88,56 @@ public class CartServiceImpl implements CartService {
 
     }
 
+    @Override
+    public ItemToCartResponse getItemsList(int id) throws ResourceNotFoundException {
+        Cart cart = cartRepository.findById(id).get();
+        if(cart==null)
+            throw new ResourceNotFoundException("Cart not found");
+
+        if(cart.getItems().size()==0)
+            throw new ResourceNotFoundException("Cart is Empty");
+
+
+        List<ItemResponse> itemResponses = new ArrayList<>();
+        for(Item item : cart.getItems())
+            itemResponses.add(ItemConverter.ItemToItemResponse(item));
+
+        return ItemConverter.ItemtoCartResponse(cart,cart.getCustomer(),itemResponses);
+    }
+
+    @Override
+    public List<ItemResponse> removeItems(int id, String name) throws ResourceNotFoundException {
+        Cart cart = cartRepository.findById(id).get();
+        if(cart==null)
+            throw new ResourceNotFoundException("Cart not found");
+
+        List<ItemResponse> responses=new ArrayList<>();
+        for(Item item: cart.getItems()){
+            if(item.getName().equals(name)){
+                responses.add(ItemConverter.ItemToItemResponse(item));
+                itemRepository.delete(item);
+            }
+        }
+
+        if(responses.size()!=0){
+            Product product = productRepository.findByName(name);
+            List<Item> items = product.getItems();
+            for(Item item : items){
+                if(item.getCart().equals(cart))
+                    items.remove(item);
+            }
+            product.setItems(items);
+        }
+
+        return responses;
+    }
+
+
     private void resetCart(Cart resetCart) {
         resetCart.setTotal(0);
         resetCart.setTotalItems(0);
         resetCart.setItems(new ArrayList<>());
-        //cartRepository.save(resetCart);
     }
+
 
 }

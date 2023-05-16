@@ -22,7 +22,6 @@ public class Ordered {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @UuidGenerator
     String orderNo;
     int total;
     @CreationTimestamp

@@ -6,6 +6,7 @@ import com.example.Great_Indian_Bazaar.dto.responseDto.AvailableProductResponse;
 import com.example.Great_Indian_Bazaar.dto.responseDto.GetProductResponse;
 import com.example.Great_Indian_Bazaar.enums.ProductCategory;
 import com.example.Great_Indian_Bazaar.enums.ProductStatus;
+import com.example.Great_Indian_Bazaar.service.OrderedService;
 import com.example.Great_Indian_Bazaar.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,9 @@ public class ProductController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    OrderedService orderedService;
 
     @PostMapping("/add")
     public ResponseEntity addProduct(@RequestBody ProductRequest productRequest){
@@ -71,4 +75,5 @@ public class ProductController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
+
 }
